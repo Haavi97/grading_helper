@@ -8,7 +8,8 @@ from config import *
 
 command = "ros launch $$/launch"
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
+# format="%(asctime)s %(levelname)s %(threadName)s %(name)s %(message)s"
 logger = logging.getLogger(__name__)
 
 
