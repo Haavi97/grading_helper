@@ -23,7 +23,7 @@ def extract_zipfile_to_path(file_path):
 def extract_projects(zipfilename):
     # TODO: check if only supplemental exists.
     ws_file_count = len(os.listdir(path=catkin_ws))
-    if ws_file_count != 1:
+    if ws_file_count > 1:
         logger.warning(f'catkin_ws has {ws_file_count} entries. For extraction it has to be empty besides '
                        f'"{supplemental_dir}" directory. No extraction is executed.')
         return
@@ -35,6 +35,7 @@ def extract_projects(zipfilename):
     # z = zipfile.ZipFile(zipfilename)
     # files = z.filelist
     # correct_list = []
+    good_files = 0
     with zipfile.ZipFile(zipfilename) as zip_file:
         for member in zip_file.namelist():
             filename = os.path.basename(member)
@@ -56,10 +57,12 @@ def extract_projects(zipfilename):
                 try:
                     internal_zipfile = zipfile.ZipFile(source)
                     internal_zipfile.extractall(path=target_path)
+                    good_files += 1
                 except zipfile.BadZipFile as e:
                     logger.error(f"{member} cannot be extracted. Has to be checked manually")
                 # shutil.copyfileobj(source, target)
                 logger.debug(f"Extracting internal zip {source=} {internal_zipfile=}")
+        logger.info(f"Extracted {good_files} projects.")
     """
     for file in files:
         if not re.fullmatch(r'.*\.zip$', file.filename):
@@ -80,15 +83,26 @@ def extract_projects(zipfilename):
 def catkin_make():
     p = os.path.normpath(f"{catkin_ws}/..")
     logger.info(f"executing catkin_make in {p}")
-
-    sub = subprocess.run([catkin_command], shell=True, cwd=p, capture_output=True, check=True)
-    logger.info(f"{sub=} {p=}")
+    try:
+        sub = subprocess.run([catkin_command], shell=True, cwd=p, capture_output=True, check=True)
+    except subprocess.CalledProcessError as e:
+        s = e.stderr.split(b'\n')
+        for i in s:
+            logger.error(i.decode())
+        logger.error("catkin_make failed.")
+        return
+    s = sub.stdout.split(b'\n')
+    logger.info(s)
+    logger.error("catkin_make succeeded.")
 
 def rospack():
     p = os.path.normpath(f"{catkin_ws}/..")
     logger.info(f"executing catkin_make in {p}")
+    try:
+        sub = subprocess.run([rospack_command], shell=True, cwd=p, capture_output=True, check=True)
+    except subprocess.CalledProcessError as e:
+        logger.info(f"sub=")
 
-    sub = subprocess.run([rospack_command], shell=True, cwd=p, capture_output=True, check=True)
     logger.info(f"{sub=} {p=}")
 
 
@@ -111,8 +125,8 @@ def main():
     for e in s:
         # extract_zipfile_to_path(f"{files_path}/{e}")
         extract_projects(f"{homework_bundle_path}/{e}")
-        logger.info("Executing catkin_make. NOT IMPLEMENTED YET.")
-        # catkin_make()
+        # logger.info("Executing catkin_make. NOT IMPLEMENTED YET.")
+        catkin_make()
         break
         return
         # rename_files_to_latin(files_path)
