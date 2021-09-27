@@ -53,8 +53,11 @@ def extract_projects(zipfilename):
             target_path = os.path.join(catkin_ws, os.path.splitext(filename)[0])
             # target_path = catkin_ws  # this is more correct but students may not include directory.
             with source:
-                internal_zipfile = zipfile.ZipFile(source)
-                internal_zipfile.extractall(path=target_path)
+                try:
+                    internal_zipfile = zipfile.ZipFile(source)
+                    internal_zipfile.extractall(path=target_path)
+                except zipfile.BadZipFile as e:
+                    logger.error(f"{member} cannot be extracted. Has to be checked manually")
                 # shutil.copyfileobj(source, target)
                 logger.debug(f"Extracting internal zip {source=} {internal_zipfile=}")
     """
@@ -96,7 +99,8 @@ def rename_files_to_latin(files_path):
     s = os.listdir(files_path)
     for e in s:
         # extract_zipfile_to_path(f"{files_path}/{e}")
-        traverse_zipfile(f"{files_path}/{e}")
+        logger.info(e)
+        # traverse_zipfile(f"{files_path}/{e}")
         break
         # normal = unicodedata.normalize('NFKD', e[1]).encode('ASCII', 'ignore')
         print(e)
