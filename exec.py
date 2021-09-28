@@ -19,7 +19,14 @@ def main():
             logger.info(f"Executing {c}")
             sub = subprocess.Popen([c], stdout=subprocess.PIPE,  stderr=subprocess.PIPE, cwd=catkin_ws, shell=True, universal_newlines=True)
             while sub.poll() is None:
-                ste, sto =  sub.communicate()
+                try:
+                    ste, sto = sub.communicate()  # timeout=5
+                except subprocess.TimeoutExpired:
+                    # The command is not giving any output, maybe we should terminate it?
+                    # sub.kill()
+                    pass
+                except KeyboardInterrupt:
+                    sub.kill()
                 logger.info(ste)
                 logger.error(sto)
             if sub.returncode == 0:
