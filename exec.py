@@ -21,14 +21,14 @@ def main():
             while sub.poll() is None:
                 try:
                     ste, sto = sub.communicate()  # timeout=5
+                    logger.info(ste)
+                    logger.error(sto)
                 except subprocess.TimeoutExpired:
                     # The command is not giving any output, maybe we should terminate it?
                     # sub.kill()
                     pass
                 except KeyboardInterrupt:
                     sub.kill()
-                logger.info(ste)
-                logger.error(sto)
             if sub.returncode == 0:
                 logger.info(f"{c} succeeded.")
             else:
