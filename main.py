@@ -91,19 +91,28 @@ def catkin_make():
         for i in s:
             logger.error(i.decode())
         logger.error("catkin_make failed.")
-        return
+        return False
     s = sub.stdout.split(b'\n')
-    logger.info(s)
-    logger.error("catkin_make succeeded.")
+    for i in s:
+        logger.error(i.decode())
+    logger.info("catkin_make succeeded.")
+    return True
 
 def rospack():
     p = os.path.normpath(f"{catkin_ws}/..")
-    logger.info(f"executing catkin_make in {p}")
+    logger.info(f"executing  rospack profile  in {p}")
     try:
         sub = subprocess.run([rospack_command], shell=True, cwd=p, capture_output=True, check=True)
     except subprocess.CalledProcessError as e:
-        logger.info(f"sub=")
-
+        s = e.stderr.split(b'\n')
+        for i in s:
+            logger.error(i.decode())
+        logger.error("rospack profile failed.")
+        return False
+    s = sub.stdout.split(b'\n')
+    for i in s:
+        logger.error(i.decode())
+    logger.info("rospack profile succeeded.")
     logger.info(f"{sub=} {p=}")
 
 
@@ -127,7 +136,9 @@ def main():
         # extract_zipfile_to_path(f"{files_path}/{e}")
         extract_projects(f"{homework_bundle_path}/{e}")
         # logger.info("Executing catkin_make. NOT IMPLEMENTED YET.")
-        catkin_make()
+        result = catkin_make()
+        if result:
+            rospack()
         break
         return
         # rename_files_to_latin(files_path)
@@ -148,8 +159,8 @@ students submit work on moodle on Monday evening
 a grader downloads zip with all folders --> extracts to catkin_ws/src
 
 * rename to latin
-'catkin_make' all student packages --> check for conflicts (bad package names, missing libraries, etc)
-'rospack profile' to crawl through the packages and update package list
+OK 'catkin_make' all student packages --> check for conflicts (bad package names, missing libraries, etc)
+OK 'rospack profile' to crawl through the packages and update package list
 run script to recursively run/launch (depending on each week's assignment) each student's work --> visually check for errors/exceptions/etc
 manually ctrl+c (or somehow trigger SIGINT in script) to skip to next submission
 get list of submissions that failed to run
