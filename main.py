@@ -98,6 +98,7 @@ def catkin_make():
     logger.info("catkin_make succeeded.")
     return True
 
+
 def rospack():
     p = os.path.normpath(f"{catkin_ws}/..")
     logger.info(f"executing  rospack profile  in {p}")
@@ -113,10 +114,7 @@ def rospack():
     for i in s:
         logger.error(i.decode())
     logger.info("rospack profile succeeded.")
-    logger.info(f"{sub=} {p=}")
 
-
-# os.system(f"cd {catkin_ws} && catkin_make")
 
 def rename_files_to_latin(files_path):
     # TODO: make this latin stuff
@@ -127,7 +125,6 @@ def rename_files_to_latin(files_path):
         # traverse_zipfile(f"{files_path}/{e}")
         break
         # normal = unicodedata.normalize('NFKD', e[1]).encode('ASCII', 'ignore')
-        print(e)
 
 
 def main():
