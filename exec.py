@@ -1,3 +1,7 @@
+"""
+This module does traverse projects in catkin_ws and executes command from configuration in them.
+Project execution can be terminated using ctr-c hotkey.
+"""
 import logging
 import os
 import subprocess

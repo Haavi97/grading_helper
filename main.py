@@ -1,4 +1,11 @@
 #!/usr/bin/python3
+"""
+This module does following things:
+* Extract projects from zipfile in directory specified in configuration.
+* Execute catkin_make in catkin_ws
+* Execute rospack command in catkin_ws
+
+"""
 import logging
 import re
 import subprocess
@@ -6,7 +13,6 @@ import zipfile
 
 from config import *
 
-command = "ros launch $$/launch"
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 # format="%(asctime)s %(levelname)s %(threadName)s %(name)s %(message)s"
