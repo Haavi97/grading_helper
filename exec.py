@@ -9,6 +9,11 @@ logger = logging.getLogger(__name__)
 
 
 def main():
+    """
+    Traverse the "catkin_src" directory from config file for projects and execute 'launch_command' in them.
+    While process is running it is safe to terminate it with CTR-C hotkey. The script intercepts it and terminates project.
+    :return:
+    """
     p = os.listdir(catkin_ws)
     for i in p:
         if i == supplemental_dir:
@@ -29,19 +34,9 @@ def main():
                     pass
                 except KeyboardInterrupt:
                     sub.kill()
-            if sub.returncode == 0:
-                logger.info(f"{c} succeeded.")
-            else:
-                logger.error(f"{c} failed.")
-        except OSError as e:
-            ste, sto =  sub.communicate()
-            # logger.i(f"{ste=} {sto=}")
-            logger.info(sto)
-            logger.error(ste)
-            raise(e)
+            logger.info(f"'{c}' returned with code {sub.returncode}.")
         except subprocess.CalledProcessError as e:
-            logger.error("Called process error")
-            logger.error(e)
+            logger.error(f"'{c}' had called process error.")
             raise(e)
 
         input(f"'{c}' completed, press <Enter>")
