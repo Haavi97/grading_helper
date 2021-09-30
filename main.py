@@ -143,10 +143,3 @@ get list of submissions that failed to run
 inform students who need to fix and resubmit within one(?) day
 anonymize packages (remove names/emails from package.xml etc) and forward to students for grading.
 """
-"""
-answer = ["y", "Y", "n", "N"]
-v = "_"
-while v not in answer:
-    v = input("Did it work (y/n)?")    
-
-"""

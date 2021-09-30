@@ -38,6 +38,11 @@ Module exec
 This module does traverse projects in catkin_ws and executes command from configuration in them.
 Project execution can be terminated using ctr-c hotkey.
 
+..versionchanged::30.09.21
+        * Showing package count and current progress.
+        * Fixed CMakelist.txt trying to be launched.
+        * Print a report in the end.
+
 Functions
 ---------
 
@@ -46,3 +51,15 @@ Functions
 :   Traverse the "catkin_src" directory from config file for projects and execute 'launch_command' in them.
     While process is running it is safe to terminate it with CTR-C hotkey. The script intercepts it and terminates project.
     :return:
+
+    
+`report(results)`
+:
+
+
+Module config
+=============
+Configuration variables. Make changes to config_custom.py.
+
+..versionchanged::30.09.21
+        * Added config_custom.py to avoid git conflicts.
