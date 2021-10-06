@@ -45,6 +45,9 @@ def randomize_student_codes():
         other_student2 = assign_other_different(student, other_student)
         assign(students[other_student], student, other_student2)
         assign(students[other_student2], student, other_student)
+    for student in students:
+        print(student != assigned[student][0] and student != assigned[student][1] and assigned[student][0] != assigned[student][1])
+
 
     return assigned
 
